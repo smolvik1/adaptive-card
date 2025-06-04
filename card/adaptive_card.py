@@ -7,6 +7,7 @@ dummy_data = [
         "type": "workflow",
         "status": "good",
         "text": "This is good!",
+        "source": "Workflow 1",
         "url": ""
     },
     {
@@ -21,6 +22,7 @@ dummy_data = [
         "type": "well",
         "status": "good",
         "text": "This is good!",
+        "source": "SQC",
         "url": ""
     },      
     ]
