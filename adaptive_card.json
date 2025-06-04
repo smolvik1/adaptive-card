@@ -1,0 +1,224 @@
+{
+    "type": "AdaptiveCard",
+    "speak": "Digital Oilfield Alerts",
+    "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.5",
+    "body": [
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": 15,
+                    "items": [
+                        {
+                            "type": "Image",
+                            "altText": "Aker BP",
+                            "size": "Small",
+                            "url": "https://companieslogo.com/img/orig/AKRBP.OL-c65af99e.png?t=1603469381",
+                            "style": "RoundedCorners",
+                            "width": "50px",
+                            "horizontalAlignment": "Left"
+                        }
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": 50,
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "wrap": true,
+                            "size": "Large",
+                            "weight": "Bolder",
+                            "color": "Default",
+                            "style": "heading",
+                            "text": "Digital Oil Friend Status"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Field: Valhall",
+                            "wrap": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "TextBlock",
+            "text": "dd.mm.yyyy hh:mm",
+            "wrap": true,
+            "spacing": "None",
+            "fontType": "Default",
+            "size": "Small",
+            "weight": "Default",
+            "isSubtle": true,
+            "color": "Default"
+        },
+        {
+            "type": "TextBlock",
+            "text": "Workflows",
+            "wrap": true,
+            "style": "heading"
+        },
+        {
+            "type": "Table",
+            "columns": [
+                {
+                    "width": 2
+                },
+                {
+                    "width": 5.5
+                }
+            ],
+            "rows": [
+                {
+                    "type": "TableRow",
+                    "cells": [
+                        {
+                            "type": "TableCell",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "Workflow 1",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableCell",
+                            "style": "good",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "This is good!",
+                                    "wrap": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "roundedCorners": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "Wells",
+            "wrap": true,
+            "style": "heading"
+        },
+        {
+            "type": "Table",
+            "columns": [
+                {
+                    "width": 2
+                },
+                {
+                    "width": 4
+                },
+                {
+                    "width": 1.5
+                }
+            ],
+            "rows": [
+                {
+                    "type": "TableRow",
+                    "cells": [
+                        {
+                            "type": "TableCell",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "A-02",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableCell",
+                            "style": "warning",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "This is not good!",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableCell",
+                            "items": [
+                                {
+                                    "type": "ActionSet",
+                                    "actions": [
+                                        {
+                                            "type": "Action.OpenUrl",
+                                            "iconUrl": "icon:DataTrending",
+                                            "title": "Plot",
+                                            "style": "positive",
+                                            "tooltip": "Plot the event for well A-02 in SeeQ",
+                                            "isEnabled": true,
+                                            "url": "http://www.vg.no"
+                                        }
+                                    ],
+                                    "horizontalAlignment": "Center"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "TableRow",
+                    "cells": [
+                        {
+                            "type": "TableCell",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "A-03",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableCell",
+                            "style": "good",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "This is good!",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableCell",
+                            "items": [
+                                {
+                                    "type": "ActionSet",
+                                    "actions": [
+                                        {
+                                            "type": "Action.OpenUrl",
+                                            "iconUrl": "icon:DataTrending",
+                                            "title": "Plot",
+                                            "style": "positive",
+                                            "tooltip": "Plot the event for well A-03 in SeeQ",
+                                            "isEnabled": false,
+                                            "url": "http://"
+                                        }
+                                    ],
+                                    "horizontalAlignment": "Center"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "separator": true,
+            "gridStyle": "default",
+            "roundedCorners": true,
+            "verticalCellContentAlignment": "Center",
+            "horizontalCellContentAlignment": "Left"
+        }
+    ]
+}
