@@ -1,13 +1,16 @@
 import json
 import pandas as pd
 import requests
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 POST_TO_TEAMS = True
 
 field_data = [
     {
         "field": "Yggdrasil",
-        "webhook_url": r"https://prod-190.westeurope.logic.azure.com:443/workflows/df4cf3ce53fb489b83eafb8b7f7136e2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=JSeywsHQywyCsbQHpRAnRw-H9MLiDr5d32CCZ8ew3ao",
+        "webhook_url": os.getenv("WEBHOOK_URL"),
         "card_timestamp": "",
     }
 ]
