@@ -213,7 +213,7 @@ def generate_wells(event_df: pd.DataFrame):
 
 
 # Combine all parts
-def generate_card(event_df: pd.DataFrame, field_df: pd.DataFrame) -> str:
+def generate_card(event_df: pd.DataFrame, field_df: pd.DataFrame) -> dict:
     field = field_df.iloc[0]["field"]
     card_timestamp = field_df.iloc[0]["card_timestamp"]
     card = {
@@ -229,6 +229,11 @@ def generate_card(event_df: pd.DataFrame, field_df: pd.DataFrame) -> str:
     card["body"].extend(generate_wells(event_df))
 
     return card
+
+def generate_card_str(event_df: pd.DataFrame, field_df: pd.DataFrame) -> str:
+    card = generate_card(event_df=event_df, field_df=field_df)
+
+    return json.dumps(card)
 
 def post_card (card: dict, webhook_url: str):
     response = requests.post(url=webhook_url, json=card)
