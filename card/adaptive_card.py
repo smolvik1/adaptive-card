@@ -18,10 +18,10 @@ field_data = [
 
 event_data = [
     {
-        "name": "Workflow 123",
+        "name": "Workflow 1",
         "type": "workflow",
         "status": "good",
-        "text": "This is good!",
+        "text": "Yolo!",
         "source": "Workflow 1",
         "url": "",
     },
@@ -61,21 +61,18 @@ field_df = pd.DataFrame(field_data)
 event_df = pd.DataFrame(event_data)
 
 
-def validate_input(df: pd.DataFrame, df_name: str, required_columns: List):
-    """
-    Validate that the DataFrame contains the required columns.
-    """
-    missing_data = df[required_columns].isnull().any()
+criticality_map = {
+    "Info": "good",
+    "Warning": "warning",
+    "Critical": "bad",
+}
 
-    # Print columns with missing data
-    if missing_data.any():
-        log_msg = f"""Missing data found in the following columns of {df_name}:
-        {missing_data[missing_data]}"""
-        print(log_msg)
 
-        return log_msg
-    else:
-        print(f"{df_name} validated successfully!")
+def fill_missing_values(
+    df: pd.DataFrame, columns_to_fill: List, default_value: str = "Missing Data"
+) -> pd.DataFrame:
+    """Fill missing values in specified columns of a DataFrame with a default value."""
+    df[columns_to_fill] = df[columns_to_fill].fillna(default_value)
 
 
 # Heading Section
@@ -260,14 +257,9 @@ def generate_section_w_url(
 
 # Combine all parts
 def generate_card(event_df: pd.DataFrame, field_df: pd.DataFrame) -> dict:
-    validate_input(
-        df=event_df,
-        required_columns=["name", "type", "status", "text"],
-        df_name="event_df",
-    )
-    validate_input(
-        df=field_df, required_columns=["field", "webhook_url"], df_name="field_df"
-    )
+    fill_missing_values(event_df, ["name", "type", "status", "text"])
+    fill_missing_values(field_df, ["field", "webhook_url"])
+
     field = field_df.iloc[0]["field"]
     card_timestamp = field_df.iloc[0]["card_timestamp"]
     card = {

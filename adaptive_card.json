@@ -134,7 +134,7 @@
                             "items": [
                                 {
                                     "type": "TextBlock",
-                                    "text": "Workflow 123",
+                                    "text": "Workflow 1",
                                     "wrap": true
                                 }
                             ]
@@ -145,7 +145,7 @@
                             "items": [
                                 {
                                     "type": "TextBlock",
-                                    "text": "This is good!",
+                                    "text": "Yolo!",
                                     "wrap": true
                                 }
                             ]
