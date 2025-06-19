@@ -3,9 +3,10 @@ import pandas as pd
 import requests
 import os
 from dotenv import load_dotenv
+from typing import List
 
 load_dotenv()
-POST_TO_TEAMS = True
+POST_TO_TEAMS = False
 
 field_data = [
     {
@@ -25,6 +26,13 @@ event_data = [
         "url": "",
     },
     {
+        "name": "Field A",
+        "type": "field",
+        "status": "warning",
+        "text": "This is not good!",
+        "url": "http://www.vg.no",
+    },
+    {
         "name": "A-02",
         "type": "well",
         "status": "warning",
@@ -39,21 +47,48 @@ event_data = [
         "source": "SQC",
         "url": "",
     },
+    {
+        "name": "A-03",
+        "type": "pipe",
+        "status": "good",
+        "text": "This is good!",
+        "source": "SQC",
+        "url": "",
+    },
 ]
 
 field_df = pd.DataFrame(field_data)
 event_df = pd.DataFrame(event_data)
 
 
+def validate_input(df: pd.DataFrame, df_name: str, required_columns: List):
+    """
+    Validate that the DataFrame contains the required columns.
+    """
+    missing_data = df[required_columns].isnull().any()
+
+    # Print columns with missing data
+    if missing_data.any():
+        log_msg = f"""Missing data found in the following columns of {df_name}:
+        {missing_data[missing_data]}"""
+        print(log_msg)
+
+        return log_msg
+    else:
+        print(f"{df_name} validated successfully!")
+
+
 # Heading Section
-def generate_heading(field: str, card_timestamp: str):
+def generate_heading(
+    field: str, card_timestamp: str, col_width: List[int] = [20, 80]
+) -> List[dict]:
     return [
         {
             "type": "ColumnSet",
             "columns": [
                 {
                     "type": "Column",
-                    "width": 15,
+                    "width": col_width[0],
                     "items": [
                         {
                             "type": "Image",
@@ -68,7 +103,7 @@ def generate_heading(field: str, card_timestamp: str):
                 },
                 {
                     "type": "Column",
-                    "width": 50,
+                    "width": col_width[1],
                     "items": [
                         {
                             "type": "TextBlock",
@@ -99,13 +134,15 @@ def generate_heading(field: str, card_timestamp: str):
 
 
 # Workflows Section
-def generate_workflows(event_df: pd.DataFrame):
-    workflows = event_df[event_df["type"] == "workflow"]
-    if workflows.empty:
+def generate_section_wo_url(
+    event_df: pd.DataFrame, type: str, title: str, col_width: List[int] = [20, 80]
+):
+    items = event_df[event_df["type"].str.lower() == type.lower()]
+    if items.empty:
         return []
 
     rows = []
-    for _, row in workflows.iterrows():
+    for _, row in items.iterrows():
         rows.append(
             {
                 "type": "TableRow",
@@ -130,7 +167,7 @@ def generate_workflows(event_df: pd.DataFrame):
     return [
         {
             "type": "TextBlock",
-            "text": "Workflows",
+            "text": title,
             "wrap": True,
             "style": "heading",
             "weight": "Bolder",
@@ -138,7 +175,7 @@ def generate_workflows(event_df: pd.DataFrame):
         },
         {
             "type": "Table",
-            "columns": [{"width": 1}, {"width": 7}],
+            "columns": [{"width": col_width[0]}, {"width": col_width[1]}],
             "rows": rows,
             "roundedCorners": True,
             "separator": True,
@@ -147,13 +184,15 @@ def generate_workflows(event_df: pd.DataFrame):
 
 
 # Wells Section
-def generate_wells(event_df: pd.DataFrame):
-    wells = event_df[event_df["type"] == "well"]
-    if wells.empty:
+def generate_section_w_url(
+    event_df: pd.DataFrame, type: str, title: str, col_width: List[int] = [20, 60, 20]
+):
+    items = event_df[event_df["type"].str.lower() == type.lower()]
+    if items.empty:
         return []
 
     rows = []
-    for _, row in wells.iterrows():
+    for _, row in items.iterrows():
         row_cells = [
             {
                 "type": "TableCell",
@@ -166,6 +205,7 @@ def generate_wells(event_df: pd.DataFrame):
             },
             {
                 "type": "TableCell",
+                # "style": row["status"],
                 "items": [
                     {
                         "type": "ActionSet",
@@ -176,10 +216,12 @@ def generate_wells(event_df: pd.DataFrame):
                                 "title": "Plot",
                                 "style": "positive",
                                 "tooltip": "Plot the event in SeeQ",
-                                "isEnabled": True
-                                if pd.notna(row["url"])
-                                and str(row["url"]).strip() != ""
-                                else False,
+                                "isEnabled": (
+                                    True
+                                    if pd.notna(row["url"])
+                                    and str(row["url"]).strip() not in ["", "0"]
+                                    else False
+                                ),
                                 "url": row["url"] or "http://",
                             }
                         ],
@@ -193,7 +235,7 @@ def generate_wells(event_df: pd.DataFrame):
     return [
         {
             "type": "TextBlock",
-            "text": "Wells",
+            "text": title,
             "wrap": True,
             "style": "heading",
             "weight": "Bolder",
@@ -201,7 +243,11 @@ def generate_wells(event_df: pd.DataFrame):
         },
         {
             "type": "Table",
-            "columns": [{"width": 1}, {"width": 6}, {"width": 1}],
+            "columns": [
+                {"width": col_width[0]},
+                {"width": col_width[1]},
+                {"width": col_width[2]},
+            ],
             "rows": rows,
             "separator": True,
             "gridStyle": "default",
@@ -214,6 +260,14 @@ def generate_wells(event_df: pd.DataFrame):
 
 # Combine all parts
 def generate_card(event_df: pd.DataFrame, field_df: pd.DataFrame) -> dict:
+    validate_input(
+        df=event_df,
+        required_columns=["name", "type", "status", "text"],
+        df_name="event_df",
+    )
+    validate_input(
+        df=field_df, required_columns=["field", "webhook_url"], df_name="field_df"
+    )
     field = field_df.iloc[0]["field"]
     card_timestamp = field_df.iloc[0]["card_timestamp"]
     card = {
@@ -224,18 +278,35 @@ def generate_card(event_df: pd.DataFrame, field_df: pd.DataFrame) -> dict:
         "msteams": {"width": "full"},
         "body": [],
     }
-    card["body"].extend(generate_heading(field, card_timestamp))
-    card["body"].extend(generate_workflows(event_df))
-    card["body"].extend(generate_wells(event_df))
-
+    card["body"].extend(generate_heading(field, card_timestamp, col_width=[20, 80]))
+    card["body"].extend(
+        generate_section_wo_url(
+            event_df, type="field", title="Field", col_width=[20, 80]
+        )
+    )
+    card["body"].extend(
+        generate_section_wo_url(
+            event_df, type="workflow", title="Workflow", col_width=[20, 80]
+        )
+    )
+    card["body"].extend(
+        generate_section_w_url(
+            event_df, type="well", title="Well", col_width=[20, 65, 15]
+        )
+    )
+    card["body"].extend(
+        generate_section_wo_url(event_df, type="pipe", title="Pipe", col_width=[20, 80])
+    )
     return card
+
 
 def generate_card_str(event_df: pd.DataFrame, field_df: pd.DataFrame) -> str:
     card = generate_card(event_df=event_df, field_df=field_df)
 
     return json.dumps(card)
 
-def post_card (card: dict, webhook_url: str):
+
+def post_card(card: dict, webhook_url: str):
     response = requests.post(url=webhook_url, json=card)
     print("Status Code:", response.status_code)
     try:
@@ -244,10 +315,12 @@ def post_card (card: dict, webhook_url: str):
         print("Response Text:", response.text)
     return response
 
+
 def do_all(event_df: pd.DataFrame, field_df: pd.DataFrame):
     webhook_url = field_df.iloc[0]["webhook_url"]
     card = generate_card(event_df=event_df, field_df=field_df)
     return post_card(card=card, webhook_url=webhook_url)
+
 
 # Export to JSON
 if __name__ == "__main__":

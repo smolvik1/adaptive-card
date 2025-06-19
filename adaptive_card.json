@@ -12,7 +12,7 @@
             "columns": [
                 {
                     "type": "Column",
-                    "width": 15,
+                    "width": 20,
                     "items": [
                         {
                             "type": "Image",
@@ -27,7 +27,7 @@
                 },
                 {
                     "type": "Column",
-                    "width": 50,
+                    "width": 80,
                     "items": [
                         {
                             "type": "TextBlock",
@@ -60,7 +60,7 @@
         },
         {
             "type": "TextBlock",
-            "text": "Workflows",
+            "text": "Field",
             "wrap": true,
             "style": "heading",
             "weight": "Bolder",
@@ -70,10 +70,59 @@
             "type": "Table",
             "columns": [
                 {
-                    "width": 1
+                    "width": 20
                 },
                 {
-                    "width": 7
+                    "width": 80
+                }
+            ],
+            "rows": [
+                {
+                    "type": "TableRow",
+                    "cells": [
+                        {
+                            "type": "TableCell",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "Field A",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableCell",
+                            "style": "warning",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "This is not good!",
+                                    "wrap": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "roundedCorners": true,
+            "separator": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "Workflow",
+            "wrap": true,
+            "style": "heading",
+            "weight": "Bolder",
+            "size": "Large"
+        },
+        {
+            "type": "Table",
+            "columns": [
+                {
+                    "width": 20
+                },
+                {
+                    "width": 80
                 }
             ],
             "rows": [
@@ -109,7 +158,7 @@
         },
         {
             "type": "TextBlock",
-            "text": "Wells",
+            "text": "Well",
             "wrap": true,
             "style": "heading",
             "weight": "Bolder",
@@ -119,13 +168,13 @@
             "type": "Table",
             "columns": [
                 {
-                    "width": 1
+                    "width": 20
                 },
                 {
-                    "width": 6
+                    "width": 65
                 },
                 {
-                    "width": 1
+                    "width": 15
                 }
             ],
             "rows": [
@@ -227,6 +276,55 @@
             "roundedCorners": true,
             "verticalCellContentAlignment": "Center",
             "horizontalCellContentAlignment": "Left"
+        },
+        {
+            "type": "TextBlock",
+            "text": "Pipe",
+            "wrap": true,
+            "style": "heading",
+            "weight": "Bolder",
+            "size": "Large"
+        },
+        {
+            "type": "Table",
+            "columns": [
+                {
+                    "width": 20
+                },
+                {
+                    "width": 80
+                }
+            ],
+            "rows": [
+                {
+                    "type": "TableRow",
+                    "cells": [
+                        {
+                            "type": "TableCell",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "A-03",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableCell",
+                            "style": "good",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "This is good!",
+                                    "wrap": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "roundedCorners": true,
+            "separator": true
         }
     ]
 }
