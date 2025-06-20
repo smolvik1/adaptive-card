@@ -1,17 +1,11 @@
 import json
 import pandas as pd
-import requests
-import os
-from dotenv import load_dotenv
 from typing import List
-
-load_dotenv()
-POST_TO_TEAMS = False
 
 field_data = [
     {
         "field": "Yggdrasil",
-        "webhook_url": os.getenv("WEBHOOK_URL"),
+        "webhook_url": "https://example.com/webhook",
         "card_timestamp": "",
     }
 ]
@@ -298,28 +292,10 @@ def generate_card_str(event_df: pd.DataFrame, field_df: pd.DataFrame) -> str:
     return json.dumps(card)
 
 
-def post_card(card: dict, webhook_url: str):
-    response = requests.post(url=webhook_url, json=card)
-    print("Status Code:", response.status_code)
-    try:
-        print("Response JSON:", response.json())
-    except ValueError:
-        print("Response Text:", response.text)
-    return response
-
-
-def do_all(event_df: pd.DataFrame, field_df: pd.DataFrame):
-    webhook_url = field_df.iloc[0]["webhook_url"]
-    card = generate_card(event_df=event_df, field_df=field_df)
-    return post_card(card=card, webhook_url=webhook_url)
-
-
 # Export to JSON
 if __name__ == "__main__":
     card = generate_card(event_df=event_df, field_df=field_df)
-    webhook_url = field_df.iloc[0]["webhook_url"]
+    card_str = generate_card_str(event_df=event_df, field_df=field_df)
 
-    if POST_TO_TEAMS and webhook_url != "":
-        post_card(card=card, webhook_url=webhook_url)
     with open("adaptive_card.json", "w") as f:
         f.write(json.dumps(card, indent=4))
